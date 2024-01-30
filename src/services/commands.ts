@@ -5,8 +5,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
 	ApplicationCommand,
-	ApplicationCommandData,
-	ChatInputApplicationCommandData,
 	Events,
 	GuildChannel,
 	Interaction,
