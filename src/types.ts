@@ -6,10 +6,14 @@ export enum CommandName {
 	// General
 	Hello = 'hello',
 	Help = 'help',
+
+	// Moderation
+	AssignRole = 'assign_role',
 }
 
 export enum CommandCategory {
 	General = 'General',
+	Moderation = 'Moderation',
 }
 
 export interface Services {

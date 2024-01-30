@@ -1,4 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable new-cap */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
+	ApplicationCommand,
+	ApplicationCommandData,
 	ChatInputApplicationCommandData,
 	Events,
 	GuildChannel,
@@ -49,7 +56,6 @@ export class CommandsService extends Service {
 						CommandModule.default.prototype instanceof Command
 					) {
 						// TODO: improve types
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, new-cap
 						const command: Command = new CommandModule.default(
 							this.client
 						);
@@ -79,13 +85,24 @@ export class CommandsService extends Service {
 				`Refreshing ${this.commands.length} application (/) commands.`
 			);
 
+			/* await this.client.application?.commands
+				.set(this.commands.map((c) => c.data))
+				.then((cmds) => {
+					cmds.toJSON().forEach((cmd) => {
+						const rawCommand =
+							this.client.application?.commands.cache.get(cmd.name);
+
+						rawCommand?.id = cmd.id;
+					});
+				}); */
+
 			const data = (await rest.put(
 				Routes.applicationGuildCommands(
 					process.env.APPLICATION_ID!,
 					process.env.GUILD_ID!
 				),
 				{ body: this.commands.map((command) => command.data.toJSON()) }
-			)) as ChatInputApplicationCommandData[];
+			)) as ApplicationCommand[];
 
 			this.client.logger.info(
 				`Reloaded ${data.length} application (/) commands.`
@@ -97,9 +114,7 @@ export class CommandsService extends Service {
 
 	private async onInteractionCreate(interaction: Interaction): Promise<void> {
 		// Check if the interaction is a chat input command
-		if (!interaction.isChatInputCommand()) {
-			return;
-		}
+		if (!interaction.isChatInputCommand()) return;
 
 		// Get the channel and guild from the interaction
 		const { channel } = interaction;
