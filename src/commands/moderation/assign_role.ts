@@ -113,7 +113,7 @@ export default class extends Command {
 				return;
 		}
 
-		let errorReason = '';
+		const errorReason: string[] = [];
 		if (!targetMembers || targetMembers.size === 0) {
 			await interaction.reply({
 				embeds: [
@@ -128,21 +128,21 @@ export default class extends Command {
 		if (
 			!ctx.guild.members.me?.permissions.has(PermissionFlagsBits.ManageRoles)
 		) {
-			errorReason +=
-				'The bot does not have the permission to manage roles.\n';
+			errorReason.push(
+				'The bot does not have the permission to manage roles.'
+			);
 		}
-		const botroles = ctx.guild.members.me?.roles.highest
-			? ctx.guild.members.me.roles.highest.position
-			: 0;
+		const botroles = ctx.guild.members.me?.roles.highest.position ?? 0;
 		if (role.position >= botroles) {
-			errorReason +=
-				'The bot cannot assign a role that is higher or equal to its own highest role.\n';
+			errorReason.push(
+				'The bot cannot assign a role that is higher or equal to its own highest role.'
+			);
 		}
 		if (errorReason) {
 			await interaction.reply({
 				embeds: [
 					ctx.messaging.errorEmbed(
-						errorReason,
+						errorReason.join('\n'),
 						errorReason.length > 1 ? 'Multiple Errors' : undefined
 					),
 				],
