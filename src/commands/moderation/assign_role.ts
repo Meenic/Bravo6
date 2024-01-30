@@ -27,7 +27,7 @@ export default class extends Command {
 					.setDescription('Assigns a role to all members.')
 					.addRoleOption((option) =>
 						option
-							.setName('role')
+							.setName('target_role')
 							.setDescription('The role to assign.')
 							.setRequired(true)
 					)
@@ -44,19 +44,19 @@ export default class extends Command {
 			)
 			.addSubcommand((subcommand) =>
 				subcommand
-					.setName('role')
+					.setName('filter')
 					.setDescription(
 						'Assigns a role to all members with a specific role.'
 					)
 					.addRoleOption((option) =>
 						option
-							.setName('role')
+							.setName('target_role')
 							.setDescription('The role to assign.')
 							.setRequired(true)
 					)
 					.addRoleOption((option) =>
 						option
-							.setName('target_role')
+							.setName('filter_role')
 							.setDescription('The role to filter by.')
 							.setRequired(true)
 					)
@@ -78,17 +78,17 @@ export default class extends Command {
 		ctx: CommandContext
 	): Promise<void> {
 		const subcommand = interaction.options.getSubcommand();
-		const role = interaction.options.getRole('role') as Role;
+		const targetRole = interaction.options.getRole('target_role') as Role;
 		const members = await ctx.guild.members.fetch();
 		const includeBots =
 			interaction.options.getBoolean('include_bots') ?? false;
 		const reason =
 			interaction.options.getString('reason') ?? 'No reason provided';
-		const targetRole = interaction.options.getRole('target_role') as Role;
+		const filterRole = interaction.options.getRole('filter_role') as Role;
 
 		let targetMembers = members.filter(
 			(member) =>
-				!member.roles.cache.has(role.id) &&
+				!member.roles.cache.has(targetRole.id) &&
 				member.manageable &&
 				(includeBots || !member.user.bot)
 		);
@@ -97,14 +97,14 @@ export default class extends Command {
 
 		switch (subcommand) {
 			case 'all':
-				embedTitle = `Assigning role ${role.name}`;
+				embedTitle = `Assigning role ${targetRole.name}`;
 				embedDescription = `The role will be assigned to a total of ${targetMembers.size.toLocaleString()} members.\nPlease be patient, as this process may take some time.`;
 				break;
-			case 'role':
+			case 'filter':
 				targetMembers = targetMembers.filter((member) =>
-					member.roles.cache.has(targetRole.id)
+					member.roles.cache.has(filterRole.id)
 				);
-				embedTitle = `Assigning role ${role.name}`;
+				embedTitle = `Assigning role ${targetRole.name}`;
 				embedDescription = `The role will be assigned to a total of ${targetMembers.size.toLocaleString()} members who have the role ${
 					targetRole.name
 				}.\nPlease be patient, as this process may take some time.`;
@@ -133,12 +133,12 @@ export default class extends Command {
 			);
 		}
 		const botroles = ctx.guild.members.me?.roles.highest.position ?? 0;
-		if (role.position >= botroles) {
+		if (targetRole.position >= botroles) {
 			errorReason.push(
 				'The bot cannot assign a role that is higher or equal to its own highest role.'
 			);
 		}
-		if (errorReason) {
+		if (errorReason.length > 0) {
 			await interaction.reply({
 				embeds: [
 					ctx.messaging.errorEmbed(
@@ -206,7 +206,7 @@ export default class extends Command {
 		const assignRole = async (member: GuildMember) => {
 			try {
 				if (member.manageable) {
-					await member.roles.add(role, reason);
+					await member.roles.add(targetRole, reason);
 					assigned += 1;
 				} else {
 					skips += 1;
