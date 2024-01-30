@@ -1,30 +1,39 @@
-# Bravo6
+# Bravo6 Discord Bot
 
-Bravo6 is a simple and fun Discord bot that can do various tasks.
+Bravo6 is a versatile Discord bot designed for various tasks.
 
 ## Features
 
--  `/assign_role` - The bot will assign a specified role to a group of members who meet certain conditions. You can use subcommands and options to customize the role assignment process. The bot will show a progress bar and a summary of the results in an embed message.
+### `/assign_role` Command
 
-   -  Subcommands:
-      -  `all` - The bot will assign the role to all members who do not have the role already.
-      -  `role` - The bot will assign the role to members who have another specified role and do not have the role already.
-   -  Options:
+The bot assigns a specified role to a group of members based on specified conditions. It provides customization through subcommands and options, displaying a progress bar and result summary in an embed message.
 
-      -  `role` - The role that you want to assign to the members. This is a required option for both subcommands.
-      -  `include_bots` - A boolean value that determines whether to include or exclude bot members in the role assignment. This is an optional option for both subcommands.
-      -  `reason` - A string that specifies the reason for the role assignment. This is an optional option for both subcommands.
-      -  `target_role` - The role that the members must have in order to be eligible for the role assignment. This is a required option for the `role` subcommand.
+#### Subcommands:
+
+-  `all`: Assigns the role to all members.
+-  `filter`: Assigns the role to members with a specified role.
+
+#### Options:
+
+-  `target_role` (Required): Specifies the role for assignment.
+-  `include_bots` (Optional): Determines whether to include bot members.
+-  `reason` (Optional): Specifies the reason for the role assignment.
+-  `filter_role` (Required for `filter`): Specifies the role members must have to be eligible.
 
 ## Installation
 
-To install Bravo6, you need to have Node.js and npm installed on your machine. You also need to create a Discord bot and get a token.
+### Prerequisites:
 
-1. Clone this repository or download the zip file
-2. Run `npm install` to install the dependencies
-3. Rename the `.env.example` file to `.env` and fill out everything
-4. Run `npm run build` to compile the typescript files
-5. Run `npm start` to start the bot
+-  Node.js and npm installed
+-  Discord bot created with a token
+
+### Steps:
+
+1. Clone or download the repository.
+2. Run `npm install` to install dependencies.
+3. Rename `.env.example` to `.env` and fill in the required information.
+4. Run `npm run build` to compile TypeScript files.
+5. Run `npm start` to start the bot.
 
 ## License
 
@@ -32,4 +41,4 @@ This project is licensed under the MIT License.
 
 ## Contributors
 
-Bravo6 is developed by [@Meenic](https://github.com/Meenic) (Discord: rainbowistaken). If you want to contribute to this project, feel free to fork this repository and make a pull request.
+Bravo6 is developed by [@Meenic](https://github.com/Meenic) (Discord: rainbowistaken). Contributions are welcome; fork the repository and make a pull request.
