@@ -4,8 +4,8 @@ import type { Service } from './services/service';
 
 export enum CommandName {
 	// General
-	Hello = 'hello',
 	Help = 'help',
+	Leaderboard = 'leaderboard',
 
 	// Moderation
 	AssignRole = 'assign_role',
@@ -21,4 +21,10 @@ export interface Services {
 
 	messaging: MessagingService;
 	commands: CommandsService;
+}
+
+export interface LeaderboardUser {
+	name: string;
+	score: number;
+	level: number;
 }
