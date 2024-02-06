@@ -27,46 +27,32 @@ export default class LeaderboardCommand extends Command {
 		// Get the page number from user input or default to page 1
 		const page = interaction.options.getInteger('page') ?? 1;
 
-		// Define score and level ranges for user generation
-		const minScore = 1000;
-		const maxScore = 100000;
-		const minLevel = 10;
-		const maxLevel = 60;
+		const MAX_SCORE = 100000000;
 
-		// Helper function to generate a random integer within a range
-		const randomInt = (min: number, max: number) => {
-			return Math.floor(Math.random() * (max - min + 1)) + min;
-		};
+		function getRandomScoreInRange(): number {
+			return Math.floor(Math.random() * MAX_SCORE);
+		}
 
-		// Helper function to generate a score based on the user's level
-		const generateScore = (level: number) => {
-			const scoreRange = maxScore - minScore;
-			const levelRange = maxLevel - minLevel;
-			const baseScore = Math.round(
-				((level - minLevel) / levelRange) * scoreRange + minScore
-			);
+		function getLevelFromScore(score: number): number {
+			const BASE_LEVEL = 1;
+			const SCORE_PER_LEVEL = 10000;
 
-			const score = Math.floor(baseScore / 10) * 10;
+			const level = Math.floor(score / SCORE_PER_LEVEL) + BASE_LEVEL;
 
-			return Math.min(maxScore, score);
-		};
-
-		// Helper function to generate a random level within the specified range
-		const generateLevel = () => {
-			return randomInt(minLevel, maxLevel);
-		};
+			return level;
+		}
 
 		// Array to store leaderboard user information
 		const users: LeaderboardUser[] = [];
 
 		// Fetch all members from the guild
-		const members = await interaction.guild?.members.fetch();
+		const members = await ctx.guild.members.fetch();
 
 		// Loop through each member and generate random leaderboard data
 		members?.forEach((member) => {
 			const name = member.user.username;
-			const level = generateLevel();
-			const score = generateScore(level);
+			const score = getRandomScoreInRange();
+			const level = getLevelFromScore(score);
 
 			// Create a leaderboard user object and add it to the array
 			const user: LeaderboardUser = { name, score, level };
