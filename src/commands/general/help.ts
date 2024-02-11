@@ -31,7 +31,9 @@ export default class extends Command {
 				(c) => c.category === commandCategory
 			);
 			if (categoryCommands.length > 0) {
-				const commandList = categoryCommands.map((c) => c.name).join(', ');
+				const commandList = categoryCommands
+					.map((c) => `**\`${c.name}\`**`)
+					.join(', ');
 				embed.addFields({ name: commandCategory, value: commandList });
 			}
 		});
