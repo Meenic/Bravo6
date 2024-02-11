@@ -13,7 +13,7 @@ export class MessagingService extends Service {
 	public async init(): Promise<true | Error> {
 		return new Promise((resolve) => {
 			setTimeout(() => {
-				this.client.logger.info(`Messaging service done`);
+				this.client.logger.info(`Messaging service initialized.`);
 				resolve(true);
 			}, 0);
 		});

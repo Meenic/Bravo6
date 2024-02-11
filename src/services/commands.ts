@@ -32,7 +32,7 @@ export class CommandsService extends Service {
 				this.onInteractionCreate.bind(this)
 			);
 		});
-		this.client.logger.info(`Commands service done`);
+		this.client.logger.info(`Commands service initalized.`);
 		return true;
 	}
 
@@ -82,17 +82,6 @@ export class CommandsService extends Service {
 			this.client.logger.info(
 				`Refreshing ${this.commands.length} application (/) commands.`
 			);
-
-			/* await this.client.application?.commands
-				.set(this.commands.map((c) => c.data))
-				.then((cmds) => {
-					cmds.toJSON().forEach((cmd) => {
-						const rawCommand =
-							this.client.application?.commands.cache.get(cmd.name);
-
-						rawCommand?.id = cmd.id;
-					});
-				}); */
 
 			const data = (await rest.put(
 				Routes.applicationGuildCommands(
