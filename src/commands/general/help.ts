@@ -1,4 +1,7 @@
-import { ChatInputCommandInteraction } from 'discord.js';
+import {
+	ApplicationCommandOptionType,
+	ChatInputCommandInteraction,
+} from 'discord.js';
 import type { MyClient } from '../../client';
 import { Command, CommandContext } from '../../command';
 import { CommandCategory, CommandName } from '../../types';
@@ -32,12 +35,40 @@ export default class extends Command {
 			);
 			if (categoryCommands.length > 0) {
 				const commandList = categoryCommands
-					.map((c) => `**\`${c.name}\`**`)
+					.flatMap((c) => this.getAllCommands(c))
 					.join(', ');
 				embed.addFields({ name: commandCategory, value: commandList });
 			}
 		});
 
 		await interaction.reply({ embeds: [embed] });
+	}
+
+	private getAllCommands(command: Command) {
+		const commandList = [];
+
+		if (
+			!command.data
+				.toJSON()
+				.options?.some(
+					(option) =>
+						option.type === ApplicationCommandOptionType.Subcommand ||
+						option.type === ApplicationCommandOptionType.SubcommandGroup
+				)
+		) {
+			commandList.push(`**\`${command.name}\`**`);
+		}
+
+		command.data.toJSON().options?.forEach((option) => {
+			if (option.type === ApplicationCommandOptionType.SubcommandGroup) {
+				option.options?.forEach((subcommand) => {
+					commandList.push(`**\`${command.name} ${subcommand.name}\`**`);
+				});
+			} else if (option.type === ApplicationCommandOptionType.Subcommand) {
+				commandList.push(`**\`${command.name} ${option.name}\`**`);
+			}
+		});
+
+		return commandList;
 	}
 }
