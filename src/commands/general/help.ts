@@ -56,16 +56,18 @@ export default class extends Command {
 						option.type === ApplicationCommandOptionType.SubcommandGroup
 				)
 		) {
-			commandList.push(`**\`${command.name}\`**`);
+			commandList.push(`</${command.name}:${command.id}>`);
 		}
 
 		command.data.toJSON().options?.forEach((option) => {
 			if (option.type === ApplicationCommandOptionType.SubcommandGroup) {
 				option.options?.forEach((subcommand) => {
-					commandList.push(`**\`${command.name} ${subcommand.name}\`**`);
+					commandList.push(
+						`</${command.name} ${subcommand.name}:${command.id}>`
+					);
 				});
 			} else if (option.type === ApplicationCommandOptionType.Subcommand) {
-				commandList.push(`**\`${command.name} ${option.name}\`**`);
+				commandList.push(`</${command.name} ${option.name}:${command.id}>`);
 			}
 		});
 
